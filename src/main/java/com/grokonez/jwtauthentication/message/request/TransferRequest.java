@@ -23,23 +23,22 @@ public class TransferRequest {
 
     private double amount;
 
-    public String getSenderaccountno() {
+    public String getSenderAccountNo() {
         return senderAccountNo;
     }
 
-    public void setSenderaccountno(String senderaccountno) {
+    public void setSenderAccountNo(String senderAccountNo) {
         this.senderAccountNo = senderAccountNo;
     }
 
-    public String getReceiveraccountno() {
+    public String getReceiverAccountNo() {
         return receiverAccountNo;
     }
 
-    public void setReceiveraccountno(String receiverAccountNo) {
+    public void setReceiverAccountNo(String receiverAccountNo) {
         this.receiverAccountNo = receiverAccountNo;
     }
-
-
+    
     public double getAmount() {
         return amount;
     }
