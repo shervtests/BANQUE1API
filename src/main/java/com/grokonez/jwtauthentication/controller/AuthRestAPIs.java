@@ -384,6 +384,10 @@ public class AuthRestAPIs {
             return new ResponseEntity<String>("Fail -> Invalid Access Key!", HttpStatus.UNAUTHORIZED);
         }
 
+        if (transferRequest.getAmount()<= 0 ) {
+            return new ResponseEntity<String>("Fail -> Please Provide A Positive Amount, We're Bank 1, No One Steal From Us!", HttpStatus.BAD_REQUEST);
+}
+
         if (transferRequest.getSenderaccountno() == null || transferRequest.getSenderaccountno().equalsIgnoreCase("")) {
             return new ResponseEntity<String>("Fail -> Please Provide Sender Account!", HttpStatus.BAD_REQUEST);
         }
@@ -392,6 +396,8 @@ public class AuthRestAPIs {
         if (!accountRepository.existsByAccountno(transferRequest.getReceiveraccountno())) {
             return new ResponseEntity<String>("Fail -> Receiver Account Not Exist!", HttpStatus.NOT_FOUND);
         }
+
+        
 
 
 
