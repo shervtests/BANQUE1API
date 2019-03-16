@@ -15,28 +15,28 @@ import javax.validation.constraints.Size;
 public class TransferRequest {
     @NotBlank
     @Size(min=3, max = 60)
-    private String senderaccountno;
+    private String senderAccountNo;
     
     @NotBlank
     @Size(min=3, max = 60)
-    private String receiveraccountno;
+    private String receiverAccountNo;
 
     private double amount;
 
     public String getSenderaccountno() {
-        return senderaccountno;
+        return senderAccountNo;
     }
 
     public void setSenderaccountno(String senderaccountno) {
-        this.senderaccountno = senderaccountno;
+        this.senderAccountNo = senderAccountNo;
     }
 
     public String getReceiveraccountno() {
-        return receiveraccountno;
+        return receiverAccountNo;
     }
 
-    public void setReceiveraccountno(String receiveraccountno) {
-        this.receiveraccountno = receiveraccountno;
+    public void setReceiveraccountno(String receiverAccountNo) {
+        this.receiverAccountNo = receiverAccountNo;
     }
 
 

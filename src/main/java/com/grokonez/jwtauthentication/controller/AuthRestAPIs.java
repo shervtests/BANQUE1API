@@ -176,7 +176,7 @@ public class AuthRestAPIs {
             System.out.println("numOfSpecial = " + numOfSpecial);
             System.out.println("numOfLetters = " + numOfLetters);
             System.out.println("numOfDigits = " + numOfDigits);
-            return new ResponseEntity<String>("Fail -> Need a least a 1 number, 1 letter and 1 special ", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Need at least 1 number, 1 letter and 1 special character", HttpStatus.BAD_REQUEST);
         }
 
 
@@ -209,19 +209,19 @@ public class AuthRestAPIs {
             switch (role) {
                 case "admin":
                     Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not found"));
                     roles.add(adminRole);
 
                     break;
                 case "pm":
                     Role pmRole = roleRepository.findByName(RoleName.ROLE_PM)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not found."));
                     roles.add(pmRole);
 
                     break;
                 default:
                     Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not found."));
                     roles.add(userRole);
             }
         });
@@ -260,21 +260,21 @@ public class AuthRestAPIs {
     public ResponseEntity<String> TransferFunds(@Valid @RequestBody TransferRequest transferRequest) throws Exception {
 
         if (!accountRepository.existsByAccountno(transferRequest.getSenderaccountno())) {
-            return new ResponseEntity<String>("Fail -> Sender Account Not Exist!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Sender Account Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
         if (!accountRepository.existsByAccountno(transferRequest.getReceiveraccountno())) {
-            return new ResponseEntity<String>("Fail -> Receiver Account Not Exist!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Receiver Account Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
         UserAccount fromaccount = accountRepository.findByAccountno(transferRequest.getSenderaccountno())
                 .orElseThrow(() ->
-                        new Exception("Sender Account Not Exist!"));
+                        new Exception("Sender Account Does Not Exist!"));
 
 
         UserAccount toaccount = accountRepository.findByAccountno(transferRequest.getReceiveraccountno())
                 .orElseThrow(() ->
-                        new Exception("Receiver Account Not Exist!"));
+                        new Exception("Receiver Account Does Not Exist!"));
 
         if (fromaccount.getAmount() < transferRequest.getAmount()) {
             return new ResponseEntity<String>("Fail -> Funds not available", HttpStatus.BAD_REQUEST);
@@ -306,7 +306,7 @@ public class AuthRestAPIs {
         fromUser.setBalance(fromaccount.getAmount());
         transRepository.save(toUser);
         transRepository.save(fromUser);
-        return ResponseEntity.ok().body("Funds successfully transfer");
+        return ResponseEntity.ok().body("Funds successfully transfered");
     }
 
 
@@ -317,21 +317,21 @@ public class AuthRestAPIs {
     public ResponseEntity<String> CreditCardPayment(@Valid @RequestBody CreditCardPaymentRequest creditRequest) throws Exception {
 
         if (!accountRepository.existsByAccountno(creditRequest.getSenderaccountno())) {
-            return new ResponseEntity<String>("Fail -> Sender Account Not Exist!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Sender Account Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
         if (!creditcardRepository.existsByCreditcardno(creditRequest.getCreditcardno())) {
-            return new ResponseEntity<String>("Fail -> Credit Card Not Exist!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Credit Card Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
         UserAccount fromaccount = accountRepository.findByAccountno(creditRequest.getSenderaccountno())
                 .orElseThrow(() ->
-                        new Exception("Sender Account Not Exist!"));
+                        new Exception("Sender Account Does Not Exist!"));
 
 
         UserCreditCard creditcard = creditcardRepository.findByCreditcardno(creditRequest.getCreditcardno())
                 .orElseThrow(() ->
-                        new Exception("Credit Card Not Exist!"));
+                        new Exception("Credit Card Does Not Exist!"));
 
 
 
@@ -372,7 +372,7 @@ public class AuthRestAPIs {
 
 
 
-        return ResponseEntity.ok().body("$"+ creditRequest.getAmount() + " against Credit Card No " + creditcard.getCreditcardno()+" Successfully Paid");
+        return ResponseEntity.ok().body(creditRequest.getAmount() + "$" + " to Credit Card No. " + creditcard.getCreditcardno()+" was successfully paid.");
     }
 
 
@@ -385,16 +385,16 @@ public class AuthRestAPIs {
         }
 
         if (transferRequest.getAmount()<= 0 ) {
-            return new ResponseEntity<String>("Fail -> Please Provide A Positive Amount, We're Bank 1, No One Steal From Us!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Please Provide A Positive Amount", HttpStatus.BAD_REQUEST);
 }
 
         if (transferRequest.getSenderaccountno() == null || transferRequest.getSenderaccountno().equalsIgnoreCase("")) {
-            return new ResponseEntity<String>("Fail -> Please Provide Sender Account!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Fail -> Please Provide A Sender Account!", HttpStatus.BAD_REQUEST);
         }
 
 
         if (!accountRepository.existsByAccountno(transferRequest.getReceiveraccountno())) {
-            return new ResponseEntity<String>("Fail -> Receiver Account Not Exist!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("Fail -> Receiver Account Does Not Exist!", HttpStatus.NOT_FOUND);
         }
 
         
@@ -404,7 +404,7 @@ public class AuthRestAPIs {
 
         UserAccount toaccount = accountRepository.findByAccountno(transferRequest.getReceiveraccountno())
                 .orElseThrow(() ->
-                        new Exception("Receiver Account Not Exist!"));
+                        new Exception("Receiver Account Does Not Exist!"));
 
         // deposit
         deposit(toaccount,transferRequest.getAmount());
@@ -425,7 +425,7 @@ public class AuthRestAPIs {
 
         transRepository.save(toUser);
 
-        return  ResponseEntity.ok().body("Funds successfully transfer");
+        return  ResponseEntity.ok().body("Funds successfully transfered");
     }
 
 
