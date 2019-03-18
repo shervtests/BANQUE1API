@@ -28,11 +28,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Joiner;
+import com.google.gson.Gson;
 import com.grokonez.jwtauthentication.Utils.CreditCardNumberGenerator;
 import com.grokonez.jwtauthentication.Utils.SearchOperation;
 import com.grokonez.jwtauthentication.Utils.Utils;
 import com.grokonez.jwtauthentication.message.request.CreditCardPaymentRequest;
 import com.grokonez.jwtauthentication.message.request.LoginForm;
+import com.grokonez.jwtauthentication.message.request.OtherBankTransferRequest;
 import com.grokonez.jwtauthentication.message.request.SignUpForm;
 import com.grokonez.jwtauthentication.message.request.TransferRequest;
 import com.grokonez.jwtauthentication.message.request.VerifyLogin1;
@@ -51,7 +53,16 @@ import com.grokonez.jwtauthentication.repository.TransactionsRepository;
 import com.grokonez.jwtauthentication.repository.UserCreditCardRepository;
 import com.grokonez.jwtauthentication.security.jwt.JwtProvider;
 import com.grokonez.jwtauthentication.specification.UserSpecificationsBuilder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -88,6 +99,13 @@ public class AuthRestAPIs {
 
     @Value("${grokonez.app.apikey}")
     private String apiKey;
+    
+    
+     @Value("${grokonez.app.otherbankapi}")
+    private  String uri;
+
+    @Value("${grokonez.app.otherbankapikey}")
+    private String key ;
     //Use to signin
 
     @PostMapping("/signin")
@@ -428,6 +446,67 @@ public class AuthRestAPIs {
         return  ResponseEntity.ok().body("Funds successfully transfered");
     }
 
+   @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PostMapping("/OtherBankTransfer")
+    public ResponseEntity<String> OtherBankTransferBankFunds( @Valid @RequestBody TransferRequest transferRequest) throws Exception {
+
+       
+        if (transferRequest.getAmount()<= 0 ) {
+            return new ResponseEntity<String>("Fail -> Please Provide A Positive Amount", HttpStatus.BAD_REQUEST);
+}
+
+        if (transferRequest.getReceiverAccountNo()== null || transferRequest.getReceiverAccountNo().equalsIgnoreCase("")) {
+            return new ResponseEntity<String>("Fail -> Please Provide A Receiver Account!", HttpStatus.BAD_REQUEST);
+        }
+
+
+        if (!accountRepository.existsByAccountno(transferRequest.getSenderAccountNo())) {
+            return new ResponseEntity<String>("Fail -> Sender Account Does Not Exist!", HttpStatus.NOT_FOUND);
+        }
+        
+        UserAccount fromaccount = accountRepository.findByAccountno(transferRequest.getSenderAccountNo())
+                .orElseThrow(() ->
+                        new Exception("Sender Account Does Not Exist!"));
+
+        
+         if (fromaccount.getAmount() < transferRequest.getAmount()) {
+            return new ResponseEntity<String>("Fail -> Funds not available", HttpStatus.BAD_REQUEST);
+        }
+
+        OtherBankTransferRequest  otherBank = new OtherBankTransferRequest();
+        otherBank.setAmount(transferRequest.getAmount());
+        otherBank.setSourceAccountNumber(transferRequest.getSenderAccountNo());
+        otherBank.setTargetAccountNumber(transferRequest.getReceiverAccountNo());
+        
+        // api call 
+        String Otherbankresponse = PostMethod(otherBank);
+        
+        if (!"Success".equals(Otherbankresponse))
+              return new ResponseEntity<String>(Otherbankresponse, HttpStatus.BAD_REQUEST);
+
+        
+        
+        // deposit
+        deposit(fromaccount,-transferRequest.getAmount());
+
+
+        accountRepository.save(fromaccount);
+
+
+
+        Transactions fromUser = new Transactions();
+        fromUser.setTranstype(Transactions.TransType.TOOTHERBANK);
+        fromUser.setDescription(Transactions.TransType.TOOTHERBANK +"("+ transferRequest.getReceiverAccountNo()+")");
+        fromUser.setDebit(transferRequest.getAmount());
+        //toUser.setDebit(0);
+        fromUser.setUserAccount(fromaccount);
+        fromUser.setBalance(fromaccount.getAmount());
+
+
+        transRepository.save(fromUser);
+
+        return  ResponseEntity.ok().body("Funds successfully transfered");
+    }
 
 
 
@@ -465,4 +544,47 @@ public class AuthRestAPIs {
     }
 
 
+    // Other Bank Post Method
+   public  String PostMethod(Object input) throws IOException  {
+     
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(input);
+            URL url = new URL(uri);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("x-api-key",key);
+            OutputStream os = conn.getOutputStream();
+            os.write(json.getBytes());
+            os.flush();
+            
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
+                 return "OTHER BANK API Fail -> Receiver Account Does Not Exist!";
+                 if (conn.getResponseCode() != HttpURLConnection.HTTP_UNAUTHORIZED)
+                 return "OTHER BANK API -> UNAuthorized Invalid Key";
+            }
+            
+          BufferedReader in = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+            return "Success";
+        } catch (MalformedURLException ex) {
+           return ex.getMessage();
+        }
+        catch (Exception ex) {
+           return ex.getMessage();
+        }
+
+      }
 }

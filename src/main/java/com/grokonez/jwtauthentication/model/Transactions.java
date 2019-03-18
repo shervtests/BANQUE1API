@@ -161,6 +161,7 @@ public class Transactions {
     TOACCOUNT,
     CREDITCARD,
     FROMOTHERBANK,
+    TOOTHERBANK,
     WITHDRAWAL,
     DEPOSIT
 }
