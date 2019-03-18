@@ -560,12 +560,14 @@ public class AuthRestAPIs {
             os.write(json.getBytes());
             os.flush();
             
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
                 
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
                  return "OTHER BANK API Fail -> Receiver Account Does Not Exist!";
-                 if (conn.getResponseCode() != HttpURLConnection.HTTP_UNAUTHORIZED)
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN)
                  return "OTHER BANK API -> UNAuthorized Invalid Key";
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_REQUEST)
+                 return "OTHER BANK API -> Bad JSON format";
             }
             
           BufferedReader in = new BufferedReader(new InputStreamReader(
