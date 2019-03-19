@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Digits;
 
 /**
  *
@@ -28,6 +29,7 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
     private String accountno;
+    @Digits (integer = 999, fraction = 2) 
     private double amount = 0.00;
   
     @JsonIgnoreProperties("userAccount")

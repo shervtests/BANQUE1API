@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Digits;
 
 /**
  *
@@ -33,7 +34,9 @@ public class UserCreditCard {
     private String cvv;
     @JsonIgnore
     private String expiryDate;
+    @Digits (integer = 999, fraction = 2) 
     private double amountavailable = 0.00;
+    @Digits (integer = 999, fraction = 2) 
     private double amountowned = 0.00;
     
     @JsonIgnoreProperties("userCreditCard")

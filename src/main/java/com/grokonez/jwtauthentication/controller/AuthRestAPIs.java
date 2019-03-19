@@ -446,7 +446,7 @@ public class AuthRestAPIs {
         return  ResponseEntity.ok().body("Funds successfully transfered");
     }
 
-   @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+  // @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/OtherBankTransfer")
     public ResponseEntity<String> OtherBankTransferBankFunds( @Valid @RequestBody TransferRequest transferRequest) throws Exception {
 
@@ -562,12 +562,12 @@ public class AuthRestAPIs {
             
             if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
                 
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
-                 return "OTHER BANK API Fail -> Receiver Account Does Not Exist!";
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN)
-                 return "OTHER BANK API -> UNAuthorized Invalid Key";
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_BAD_REQUEST)
-                 return "OTHER BANK API -> Bad JSON format";
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND)
+                 return "OTHER BANK API Fail -> Receiver Account Does Not Exist. HTTP CODE: " + HttpURLConnection.HTTP_NOT_FOUND ;
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED)
+                 return "OTHER BANK API Fail -> UNAuthorized Invalid Key. HTTP CODE: " + HttpURLConnection.HTTP_UNAUTHORIZED;
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
+                 return "OTHER BANK API Fail -> Bad JSON format HTTP CODE: " + HttpURLConnection.HTTP_BAD_REQUEST;
             }
             
           BufferedReader in = new BufferedReader(new InputStreamReader(

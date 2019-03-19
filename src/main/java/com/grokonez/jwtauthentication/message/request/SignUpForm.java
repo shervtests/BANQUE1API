@@ -41,9 +41,11 @@ public class SignUpForm {
     private String answer2;
     
     private String address;
-
-    private double amount = 0;
+   @Digits (integer = 999, fraction = 2) 
+    private double amount ;
+   @Digits (integer = 999, fraction = 2) 
     private double creditbalanceavailable = 0;
+   @Digits (integer = 999, fraction = 2) 
     private double creditbalanceowned =  0;
 
     public double getAmount() {
