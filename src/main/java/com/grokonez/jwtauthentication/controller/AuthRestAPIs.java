@@ -60,6 +60,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -516,7 +517,7 @@ public class AuthRestAPIs {
 
         double balance = acct.getAmount();   // get the current balance
         balance += amount;                    // adjust the balance
-        acct.setAmount( balance );           // set the new balance
+        acct.setAmount(Double.parseDouble(String.format("%.2f", balance )));           // set the new balance
     }
 
     private void deposit(UserCreditCard creditcard, double amount )
@@ -526,8 +527,8 @@ public class AuthRestAPIs {
         double creditowed = creditcard.getAmountowned();   // get the current owed
         creditlimit += amount;                    // adjust the creditlimit
         creditowed  -= amount;                    // adjust the creditlimit
-        creditcard.setAmountavailable(creditlimit);// set the new creditlimit
-        creditcard.setAmountowned(creditowed);// set the new current owed
+        creditcard.setAmountavailable(Double.parseDouble(String.format("%.2f", creditlimit)));// set the new creditlimit
+        creditcard.setAmountowned(Double.parseDouble(String.format("%.2f",creditowed)));// set the new current owed
 
     }
 
@@ -561,16 +562,21 @@ public class AuthRestAPIs {
             os.flush();
             
             if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
+
                 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND)
                  return "OTHER BANK API Fail -> Receiver Account Does Not Exist. HTTP CODE: " + HttpURLConnection.HTTP_NOT_FOUND ;
-                if (conn.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED)
-                 return "OTHER BANK API Fail -> UNAuthorized Invalid Key. HTTP CODE: " + HttpURLConnection.HTTP_UNAUTHORIZED;
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN)
+                 return "OTHER BANK API Fail -> UNAuthorized Invalid Key. HTTP CODE: " + HttpURLConnection.HTTP_FORBIDDEN;
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
                  return "OTHER BANK API Fail -> Bad JSON format HTTP CODE: " + HttpURLConnection.HTTP_BAD_REQUEST;
             }
-            
-          BufferedReader in = new BufferedReader(new InputStreamReader(
+
+            else {
+                return "OTHER BANK API SUCCESS -> Funds successfully transfered. HTTP CODE: " + HttpURLConnection.HTTP_NO_CONTENT ;
+            }
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
