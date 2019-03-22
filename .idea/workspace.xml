@@ -4,6 +4,7 @@
     <list default="true" id="08dd54f3-2aa4-483e-a877-525c0d60aeaa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,17 +18,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5">
-              <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+            <state relative-caret-position="235">
+              <caret line="29" column="30" lean-forward="true" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/roles.sql">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/grokonez/jwtauthentication/controller/AuthRestAPIs.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1291">
-              <caret line="436" column="60" selection-start-line="436" selection-start-column="51" selection-end-line="436" selection-end-column="60" />
+            <state relative-caret-position="116">
+              <caret line="260" column="64" selection-start-line="260" selection-start-column="58" selection-end-line="260" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -64,8 +70,11 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>invalid</find>
-      <find>apikey</find>
       <find>sourceAccountNumber</find>
+      <find>api</find>
+      <find>test</find>
+      <find>apikey</find>
+      <find>search</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -93,7 +102,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -156,6 +164,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -209,18 +218,20 @@
       <workItem from="1553112365324" duration="939000" />
       <workItem from="1553114777045" duration="784000" />
       <workItem from="1553227235618" duration="1418000" />
-      <workItem from="1553264401353" duration="324000" />
+      <workItem from="1553264401353" duration="1655000" />
+      <workItem from="1553266385454" duration="1478000" />
+      <workItem from="1553271634099" duration="973000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10477000" />
+    <option name="totallyTimeSpent" value="14259000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="751" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2819063" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2907916" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -231,7 +242,7 @@
       <window_info id="Web" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32776934" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32776934" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -269,6 +280,9 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/roles.sql">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/grokonez/jwtauthentication/model/UserCreditCard.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -292,15 +306,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/grokonez/jwtauthentication/controller/AuthRestAPIs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1291">
-          <caret line="436" column="60" selection-start-line="436" selection-start-column="51" selection-end-line="436" selection-end-column="60" />
+        <state relative-caret-position="116">
+          <caret line="260" column="64" selection-start-line="260" selection-start-column="58" selection-end-line="260" selection-end-column="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5">
-          <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+        <state relative-caret-position="235">
+          <caret line="29" column="30" lean-forward="true" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
         </state>
       </provider>
     </entry>
