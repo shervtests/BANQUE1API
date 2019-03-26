@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,9 @@ public class UserCreditCard {
     private double amountavailable = 0.00;
     @Digits (integer = 999, fraction = 2) 
     private double amountowned = 0.00;
+    @Column(nullable = true)
+    @Digits (integer = 999, fraction = 2)
+    private double creditLimit = 0.00;
     
     @JsonIgnoreProperties("userCreditCard")
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -52,12 +56,13 @@ public class UserCreditCard {
     public UserCreditCard() {
     }
 
-    public UserCreditCard(String creditcardno, String cvv, String expiryDate, double amountavailable, double amountowned) {  
+    public UserCreditCard(String creditcardno, String cvv, String expiryDate, double amountavailable, double amountowned, double creditlimit) {
         this.creditcardno = creditcardno;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
         this.amountavailable = amountavailable;
         this.amountowned = amountowned;
+        this.creditLimit = creditlimit;
     }
 
     public Long getId() {
@@ -106,6 +111,14 @@ public class UserCreditCard {
 
     public void setAmountowned(double amountowned) {
         this.amountowned = amountowned;
+    }
+
+    public double getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(double creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     public User getUser() {

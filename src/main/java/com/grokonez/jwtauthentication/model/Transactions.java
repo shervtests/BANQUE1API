@@ -19,12 +19,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.validation.constraints.Digits;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  *
@@ -42,6 +44,12 @@ public class Transactions {
     @Column(length = 60)
     private TransType Transtype;
     
+    @Enumerated(EnumType.STRING)
+    @Column(length = 60)
+    private TransStatus Transstatus;
+    
+    
+    
     private String Description;
      @Digits (integer = 999, fraction = 2) 
     private double credit;
@@ -54,6 +62,17 @@ public class Transactions {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date transdate ;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date updatedAt;
+
+    
+    @PreUpdate
+    protected void onUpdate() {
+    updatedAt = new Date();
+    }
     
     @PrePersist
     protected void onCreate() {
@@ -74,8 +93,6 @@ public class Transactions {
     }
 
   
-
- 
 
     
     public Long getId() {
@@ -157,19 +174,47 @@ public class Transactions {
     public void setUserCreditcard(UserCreditCard userCreditcard) {
         this.userCreditcard = userCreditcard;
     }
+
+    public TransStatus getTransstatus() {
+        return Transstatus;
+    }
+
+    public void setTransstatus(TransStatus Transstatus) {
+        this.Transstatus = Transstatus;
+    }
+
+  
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
     
     
  public enum  TransType {
     INITIALBALANCE,
-    FROMACCOUNT,
-    TOACCOUNT,
-    CREDITCARD,
-    FROMOTHERBANK,
-    TOOTHERBANK,
+    VIREMENT_DE,
+    VIREMENT_A,
+    CARTE_DE_CREDIT,
+    VIREMENT_DE_DESPEPINIERES,
+    VIREMENT_A_DESPEPINIERES,
     WITHDRAWAL,
-    DEPOSIT
+    DEPOSIT,
+     PAIEMENT_DE_CLIENT
+
+
 }
+
  
+  public enum  TransStatus{
+    CREATED,
+    CANCELLED,
+    COMMITTED
+}
 }
 
 

@@ -201,7 +201,7 @@ public class AuthRestAPIs {
 
 
         // Creating user's account
-        User user = new User(signUpRequest.getFirstname(),signUpRequest.getLastname(), signUpRequest.getUsername(), signUpRequest.getEmail(),
+        User user = new User(signUpRequest.getCompany(), signUpRequest.getFirstname(),signUpRequest.getLastname(), signUpRequest.getUsername(), signUpRequest.getEmail(),
                 signUpRequest.getQuestion1(), signUpRequest.getAnswer1(), signUpRequest.getQuestion2(),
                 signUpRequest.getAnswer2(), encoder.encode(signUpRequest.getPassword()));
         UserCreditCard userCreditCard = new UserCreditCard();
@@ -257,7 +257,6 @@ public class AuthRestAPIs {
         return ResponseEntity.ok().body("User registered successfully!" );
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/searchusers")
     @ResponseBody
     public List<User> search(@RequestParam(value = "search") String search) {
@@ -306,8 +305,8 @@ public class AuthRestAPIs {
         accountRepository.save(fromaccount);
 
         Transactions toUser = new Transactions();
-        toUser.setTranstype(Transactions.TransType.FROMACCOUNT);
-        toUser.setDescription(Transactions.TransType.FROMACCOUNT +"("+ fromaccount.getAccountno() +")");
+        toUser.setTranstype(Transactions.TransType.VIREMENT_DE);
+        toUser.setDescription(Transactions.TransType.VIREMENT_DE +"("+ fromaccount.getAccountno() +")");
         toUser.setCredit(transferRequest.getAmount());
         //toUser.setDebit(0);
         toUser.setUserAccount(toaccount);
@@ -317,8 +316,8 @@ public class AuthRestAPIs {
         // transRepository.save(new Transactions(Transactions.TransType.TOACCOUNT,0.00,transferRequest.getAmount(),fromaccount.getAmount(), fromaccount.getUser()));
 
         Transactions fromUser = new Transactions();
-        fromUser.setTranstype(Transactions.TransType.TOACCOUNT);
-        fromUser.setDescription(Transactions.TransType.TOACCOUNT +"("+ toaccount.getAccountno() +")");
+        fromUser.setTranstype(Transactions.TransType.VIREMENT_A);
+        fromUser.setDescription(Transactions.TransType.VIREMENT_A +"("+ toaccount.getAccountno() +")");
         fromUser.setDebit(transferRequest.getAmount());
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
@@ -369,8 +368,8 @@ public class AuthRestAPIs {
         //  transRepository.save(new Transactions(Transactions.TransType.CREDITCARD,0.00,creditRequest.getAmount(),fromaccount.getAmount(), fromaccount.getUser()));
 
         Transactions creditcardtrans = new Transactions();
-        creditcardtrans.setTranstype(Transactions.TransType.FROMACCOUNT);
-        creditcardtrans.setDescription(Transactions.TransType.FROMACCOUNT +"("+ fromaccount.getAccountno() +")");
+        creditcardtrans.setTranstype(Transactions.TransType.VIREMENT_DE);
+        creditcardtrans.setDescription(Transactions.TransType.VIREMENT_DE +"("+ fromaccount.getAccountno() +")");
         creditcardtrans.setCredit(creditRequest.getAmount());
         //toUser.setDebit(0);
         creditcardtrans.setUserCreditcard(creditcard);
@@ -378,8 +377,8 @@ public class AuthRestAPIs {
 
 
         Transactions fromUser = new Transactions();
-        fromUser.setTranstype(Transactions.TransType.CREDITCARD);
-        fromUser.setDescription(Transactions.TransType.CREDITCARD +"("+ creditcard.getCreditcardno()+")");
+        fromUser.setTranstype(Transactions.TransType.CARTE_DE_CREDIT);
+        fromUser.setDescription(Transactions.TransType.CARTE_DE_CREDIT +"("+ creditcard.getCreditcardno()+")");
         fromUser.setDebit(creditRequest.getAmount()) ;
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
@@ -434,8 +433,8 @@ public class AuthRestAPIs {
 
 
         Transactions toUser = new Transactions();
-        toUser.setTranstype(Transactions.TransType.FROMOTHERBANK);
-        toUser.setDescription(Transactions.TransType.FROMOTHERBANK +"("+ transferRequest.getSenderAccountNo()+")");
+        toUser.setTranstype(Transactions.TransType.VIREMENT_DE_DESPEPINIERES);
+        toUser.setDescription(Transactions.TransType.VIREMENT_DE_DESPEPINIERES +"("+ transferRequest.getSenderAccountNo()+")");
         toUser.setCredit(transferRequest.getAmount());
         //toUser.setDebit(0);
         toUser.setUserAccount(toaccount);
@@ -482,7 +481,7 @@ public class AuthRestAPIs {
         // api call 
         String Otherbankresponse = PostMethod(otherBank);
         
-        if (!"Success".equals(Otherbankresponse))
+        if (!Otherbankresponse.contains("OTHER BANK API SUCCESS"))
               return new ResponseEntity<String>(Otherbankresponse, HttpStatus.BAD_REQUEST);
 
         
@@ -496,8 +495,8 @@ public class AuthRestAPIs {
 
 
         Transactions fromUser = new Transactions();
-        fromUser.setTranstype(Transactions.TransType.TOOTHERBANK);
-        fromUser.setDescription(Transactions.TransType.TOOTHERBANK +"("+ transferRequest.getReceiverAccountNo()+")");
+        fromUser.setTranstype(Transactions.TransType.VIREMENT_A_DESPEPINIERES);
+        fromUser.setDescription(Transactions.TransType.VIREMENT_A_DESPEPINIERES +"("+ transferRequest.getReceiverAccountNo()+")");
         fromUser.setDebit(transferRequest.getAmount());
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
@@ -506,7 +505,7 @@ public class AuthRestAPIs {
 
         transRepository.save(fromUser);
 
-        return  ResponseEntity.ok().body("Funds successfully transfered");
+        return  ResponseEntity.ok().body(Otherbankresponse);
     }
 
 
@@ -572,7 +571,7 @@ public class AuthRestAPIs {
                  return "OTHER BANK API Fail -> Bad JSON format HTTP CODE: " + HttpURLConnection.HTTP_BAD_REQUEST;
             }
 
-            else {
+           else {
                 return "OTHER BANK API SUCCESS -> Funds successfully transfered. HTTP CODE: " + HttpURLConnection.HTTP_NO_CONTENT ;
             }
 
