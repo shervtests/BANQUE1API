@@ -216,6 +216,7 @@ public class AuthRestAPIs {
         CreditCardNumberGenerator generator = new CreditCardNumberGenerator();
         userAccount.setAccountno(generator.generate("111", 8));
         userCreditCard.setCreditcardno(generator.generate("11111", 16));
+        userCreditCard.setCreditLimit(signUpRequest.getCreditLimit());
         userCreditCard.setAmountavailable(signUpRequest.getCreditbalanceavailable());
         userCreditCard.setAmountowned(signUpRequest.getCreditbalanceowned());
         userAccount.setAmount(signUpRequest.getAmount());
