@@ -62,7 +62,7 @@ public class UserCreditCard {
         this.expiryDate = expiryDate;
         this.amountavailable = amountavailable;
         this.amountowned = amountowned;
-        this.creditLimit = creditlimit;
+        this.creditLimit = creditLimit;
     }
 
     public Long getId() {
