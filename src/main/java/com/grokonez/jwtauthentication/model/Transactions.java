@@ -56,7 +56,7 @@ public class Transactions {
       @Digits (integer = 999, fraction = 2) 
     private double debit  ;
        @Digits (integer = 999, fraction = 2) 
-    private double balance;
+    private double currently_available_funds;
     
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -143,12 +143,12 @@ public class Transactions {
         this.debit = debit;
     }
 
-    public double getBalance() {
-        return balance;
+    public double getCurrently_available_funds() {
+        return currently_available_funds;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setCurrently_available_funds(double currently_available_funds) {
+        this.currently_available_funds = currently_available_funds;
     }
 
     public String getDescription() {

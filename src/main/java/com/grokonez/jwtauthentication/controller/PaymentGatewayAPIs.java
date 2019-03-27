@@ -137,7 +137,7 @@ public class PaymentGatewayAPIs {
         transcreditcard.setDebit(paymentRequest.getAmount());
         //toUser.setDebit(0);
         transcreditcard.setUserCreditcard(creditcard);
-        transcreditcard.setBalance(creditcard.getAmountavailable());
+        transcreditcard.setCurrently_available_funds(creditcard.getAmountavailable());
         transRepository.save(transcreditcard);
          
         return  ResponseEntity.ok(new Response(transcreditcard.getId().toString(),"ACCEPTED"));
@@ -200,7 +200,7 @@ public class PaymentGatewayAPIs {
                 toUser.setCredit(transaction.getDebit());
                 //toUser.setDebit(0);
                 toUser.setUserAccount(toaccount);
-                toUser.setBalance(toaccount.getAmount());
+                toUser.setCurrently_available_funds(toaccount.getAmount());
                 transRepository.save(toUser);
                
               // Commited Transaction 

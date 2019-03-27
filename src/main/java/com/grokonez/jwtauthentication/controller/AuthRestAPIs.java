@@ -310,7 +310,7 @@ public class AuthRestAPIs {
         toUser.setCredit(transferRequest.getAmount());
         //toUser.setDebit(0);
         toUser.setUserAccount(toaccount);
-        toUser.setBalance(toaccount.getAmount());
+        toUser.setCurrently_available_funds(toaccount.getAmount());
         // transRepository.save(new Transactions(Transactions.TransType.FROMACCOUNT,Transactions.TransType.FROMACCOUNT + fromaccount.getAccountno(), transferRequest.getAmount(),0.00,toaccount.getAmount(), toaccount.getUser()));
 
         // transRepository.save(new Transactions(Transactions.TransType.TOACCOUNT,0.00,transferRequest.getAmount(),fromaccount.getAmount(), fromaccount.getUser()));
@@ -321,7 +321,7 @@ public class AuthRestAPIs {
         fromUser.setDebit(transferRequest.getAmount());
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
-        fromUser.setBalance(fromaccount.getAmount());
+        fromUser.setCurrently_available_funds(fromaccount.getAmount());
         transRepository.save(toUser);
         transRepository.save(fromUser);
         return ResponseEntity.ok().body("Funds successfully transfered");
@@ -373,7 +373,7 @@ public class AuthRestAPIs {
         creditcardtrans.setCredit(creditRequest.getAmount());
         //toUser.setDebit(0);
         creditcardtrans.setUserCreditcard(creditcard);
-        creditcardtrans.setBalance(creditcard.getAmountavailable());
+        creditcardtrans.setCurrently_available_funds(creditcard.getAmountavailable());
 
 
         Transactions fromUser = new Transactions();
@@ -382,7 +382,7 @@ public class AuthRestAPIs {
         fromUser.setDebit(creditRequest.getAmount()) ;
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
-        fromUser.setBalance(fromaccount.getAmount());
+        fromUser.setCurrently_available_funds(fromaccount.getAmount());
 
 
         transRepository.save(creditcardtrans);
@@ -438,7 +438,7 @@ public class AuthRestAPIs {
         toUser.setCredit(transferRequest.getAmount());
         //toUser.setDebit(0);
         toUser.setUserAccount(toaccount);
-        toUser.setBalance(toaccount.getAmount());
+        toUser.setCurrently_available_funds(toaccount.getAmount());
 
 
         transRepository.save(toUser);
@@ -500,7 +500,7 @@ public class AuthRestAPIs {
         fromUser.setDebit(transferRequest.getAmount());
         //toUser.setDebit(0);
         fromUser.setUserAccount(fromaccount);
-        fromUser.setBalance(fromaccount.getAmount());
+        fromUser.setCurrently_available_funds(fromaccount.getAmount());
 
 
         transRepository.save(fromUser);
