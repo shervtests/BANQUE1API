@@ -334,20 +334,20 @@ public class AuthRestAPIs {
     @PostMapping("/CrediCardPayment")
     public ResponseEntity<String> CreditCardPayment(@Valid @RequestBody CreditCardPaymentRequest creditRequest) throws Exception {
 
-        if (!accountRepository.existsByAccountno(creditRequest.getSenderaccountno())) {
+        if (!accountRepository.existsByAccountno(creditRequest.getSenderAccountNo())) {
             return new ResponseEntity<String>("Fail -> Sender Account Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
-        if (!creditcardRepository.existsByCreditcardno(creditRequest.getCreditcardno())) {
+        if (!creditcardRepository.existsByCreditcardno(creditRequest.getCreditCardNo())) {
             return new ResponseEntity<String>("Fail -> Credit Card Does Not Exist!", HttpStatus.BAD_REQUEST);
         }
 
-        UserAccount fromaccount = accountRepository.findByAccountno(creditRequest.getSenderaccountno())
+        UserAccount fromaccount = accountRepository.findByAccountno(creditRequest.getSenderAccountNo())
                 .orElseThrow(() ->
                         new Exception("Sender Account Does Not Exist!"));
 
 
-        UserCreditCard creditcard = creditcardRepository.findByCreditcardno(creditRequest.getCreditcardno())
+        UserCreditCard creditcard = creditcardRepository.findByCreditcardno(creditRequest.getCreditCardNo())
                 .orElseThrow(() ->
                         new Exception("Credit Card Does Not Exist!"));
 

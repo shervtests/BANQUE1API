@@ -144,7 +144,7 @@ public class PaymentGatewayAPIs {
     }
     
     
-     @PostMapping("/Process")
+     @PostMapping("/process")
     public ResponseEntity<?> Process(@RequestHeader(value="apikey") String apiKey,  @Valid @RequestBody ProcessRequest processrequest ) throws Exception {
 
         if (!this.apiKey.equalsIgnoreCase(apiKey)) {

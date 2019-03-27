@@ -5,10 +5,16 @@ import java.util.Set;
 import javax.validation.constraints.*;
 
 public class SignUpForm {
+    @NotBlank
+    @Size(min=3, max = 50)
     private String company;
 
+    @NotBlank
+    @Size(min = 3, max = 50)
     private String firstname;
 
+    @NotBlank
+    @Size(min = 3, max = 50)
     private String lastname;
 
     @NotBlank
@@ -19,33 +25,31 @@ public class SignUpForm {
     @Size(max = 60)
     @Email
     private String email;
-    
+
     private Set<String> role;
-    
+
     @NotBlank
     @Size(min=6, max = 100)
     private String question1;
-    
+
     @NotBlank
+    @Size(min=6, max = 100)
     private String answer1;
-    
+
     @NotBlank
     @Size(min=6, max = 100)
     private String question2;
-    
-    @NotBlank
-    private String answer2;
-    
-    private String address;
-   @Digits (integer = 999, fraction = 2) 
-    private double amount = 0;
-   @Digits (integer = 999, fraction = 2) 
-    private double creditbalanceavailable = 0;
-   @Digits (integer = 999, fraction = 2) 
-    private double creditbalanceowned =  0;
-    @Digits (integer = 999, fraction = 2)
-    private double creditLimit =  0;
 
+    @NotBlank
+    @Size(min=6, max = 100)
+    private String answer2;
+
+    private String address;
+
+    private double amount = 0;
+    private double creditbalanceavailable = 0;
+    private double creditbalanceowned =  0;
+    private double creditLimit = 0;
 
     public double getAmount() {
         return amount;
@@ -140,45 +144,45 @@ public class SignUpForm {
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
-    
-    
-    
+
+
+
     public String getQuestion2() {
-		return question2;
-	}
+        return question2;
+    }
 
-	public void setQuestion2(String question2) {
-		this.question2 = question2;
-	}
+    public void setQuestion2(String question2) {
+        this.question2 = question2;
+    }
 
-	public String getAnswer2() {
-		return answer2;
-	}
+    public String getAnswer2() {
+        return answer2;
+    }
 
-	public void setAnswer2(String answer2) {
-		this.answer2 = answer2;
-	}
+    public void setAnswer2(String answer2) {
+        this.answer2 = answer2;
+    }
 
-	public String getAnswer1() {
-		return answer1;
-	}
+    public String getAnswer1() {
+        return answer1;
+    }
 
-	public void setAnswer1(String answer1) {
-		this.answer1 = answer1;
-	}
+    public void setAnswer1(String answer1) {
+        this.answer1 = answer1;
+    }
 
-	@NotBlank
+    @NotBlank
     @Size(min = 6, max = 40)
     private String password;
-    
+
 
     public String getQuestion1() {
-		return question1;
-	}
+        return question1;
+    }
 
-	public void setQuestion1(String question1) {
-		this.question1 = question1;
-	}
+    public void setQuestion1(String question1) {
+        this.question1 = question1;
+    }
 
     public String getFirstname() {
         return firstname;
@@ -227,12 +231,12 @@ public class SignUpForm {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public Set<String> getRole() {
-    	return this.role;
+        return this.role;
     }
-    
+
     public void setRole(Set<String> role) {
-    	this.role = role;
+        this.role = role;
     }
 }
