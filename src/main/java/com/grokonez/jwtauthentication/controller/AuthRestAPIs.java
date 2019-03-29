@@ -129,7 +129,7 @@ public class AuthRestAPIs {
     }
 
     //Use to verify second verify
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/verify2")
     public ResponseEntity<?> authenticateVerify(@Valid @RequestBody VerifyLogin2 verifyLogin) {
 

@@ -27,7 +27,6 @@ public class SignUpForm {
     private String question1;
 
     @NotBlank
-    @Size(min=1, max = 100)
     private String answer1;
 
     @NotBlank
@@ -35,7 +34,6 @@ public class SignUpForm {
     private String question2;
 
     @NotBlank
-    @Size(min=1, max = 100)
     private String answer2;
 
     private String address;
