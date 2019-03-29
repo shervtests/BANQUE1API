@@ -33,12 +33,14 @@ import com.grokonez.jwtauthentication.Utils.CreditCardNumberGenerator;
 import com.grokonez.jwtauthentication.Utils.SearchOperation;
 import com.grokonez.jwtauthentication.Utils.Utils;
 import com.grokonez.jwtauthentication.message.request.CreditCardPaymentRequest;
+import com.grokonez.jwtauthentication.message.request.ForgetPasswordRequest;
 import com.grokonez.jwtauthentication.message.request.LoginForm;
 import com.grokonez.jwtauthentication.message.request.OtherBankTransferRequest;
 import com.grokonez.jwtauthentication.message.request.SignUpForm;
 import com.grokonez.jwtauthentication.message.request.TransferRequest;
 import com.grokonez.jwtauthentication.message.request.VerifyLogin1;
 import com.grokonez.jwtauthentication.message.request.VerifyLogin2;
+import com.grokonez.jwtauthentication.message.response.InfoResponse;
 import com.grokonez.jwtauthentication.message.response.JwtResponse;
 import com.grokonez.jwtauthentication.model.Role;
 import com.grokonez.jwtauthentication.model.RoleName;
@@ -61,12 +63,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -148,7 +155,87 @@ public class AuthRestAPIs {
         }
 
     }
+    
+     @GetMapping("/getQuestions/{username}")
+    public ResponseEntity<?> getQuestionsforgetPassword(@PathVariable("username") String username) {
 
+        
+          User user = userRepository.findByUsername(username).orElse(null);
+          
+          if (user == null) {
+            return new ResponseEntity<String>("Username not found", HttpStatus.BAD_REQUEST);
+           }
+          
+          Map<String, String> questions = new HashMap<>();
+         
+           questions.put("Question1",user.getQuestion1());
+           questions.put("Question2",user.getQuestion2());
+            return  ResponseEntity.ok(questions);
+       
+    }
+   
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgetPasswordRequest request) {
+          String response = null ;
+        Map<String, String> responses = new HashMap<>();
+         responses.put("info",response);
+          User user = userRepository.findByUsername(request.getUsername()).orElse(null);
+          
+          if (user == null) {
+            return new ResponseEntity<Object>(new InfoResponse("Username not found"), HttpStatus.BAD_REQUEST);
+           }
+          if (!(userRepository.existsByQuestion1((request.getQuestion1()))
+                && userRepository.existsByAnswer1((request.getAnswer1())))) 
+            return new ResponseEntity<Object>(new InfoResponse("Incorrect answer1"), HttpStatus.BAD_REQUEST);
+       
+         if (!(userRepository.existsByQuestion2((request.getQuestion2()))
+                && userRepository.existsByAnswer2((request.getAnswer2())))) 
+            return new ResponseEntity<Object>(new InfoResponse("Incorrect answer2"), HttpStatus.BAD_REQUEST);
+       
+          
+         //Use to verify is the password fil all requierement
+        int numOfSpecial = 0;
+        int numOfLetters = 0;
+        int numOfDigits = 0;
+        int totalCharacter = 0;
+
+        byte[] bytes = request.getPassword().getBytes();
+        for (byte tempByte : bytes) {
+            if (tempByte >= 33 && tempByte <= 47) {
+                numOfSpecial++;
+                totalCharacter++;
+            }
+
+            char tempChar = (char) tempByte;
+            if (Character.isDigit(tempChar)) {
+                numOfDigits++;
+                totalCharacter++;
+            }
+
+            if (Character.isLetter(tempChar)) {
+                numOfLetters++;
+                totalCharacter++;
+            }
+
+        }
+
+        if (totalCharacter < 8) {
+            return new ResponseEntity<Object>(new InfoResponse("Fail -> Not enough character"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (numOfSpecial < 1 || numOfLetters < 1 || numOfDigits < 1) {
+            System.out.println("numOfSpecial = " + numOfSpecial);
+            System.out.println("numOfLetters = " + numOfLetters);
+            System.out.println("numOfDigits = " + numOfDigits);
+            return new ResponseEntity<Object>(new InfoResponse("Fail -> Need at least 1 number, 1 letter and 1 special character"), HttpStatus.BAD_REQUEST);
+        }
+            
+        user.setPassword(encoder.encode(request.getPassword()));
+        userRepository.save(user);
+         
+        return ResponseEntity.ok().body(new InfoResponse("Password successfully Changed!") );
+        
+    }
     // use to create user
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {

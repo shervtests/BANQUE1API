@@ -69,15 +69,15 @@ public class PaymentGatewayAPIs {
     public ResponseEntity<?> PreAuth(@RequestHeader(value="apikey") String apiKey,  @Valid @RequestBody PaymentGatewayRequest paymentRequest) throws Exception {
         
         if (!this.apiKey.equalsIgnoreCase(apiKey)) {
-            return new ResponseEntity<String>("Fail -> Invalid Access Key!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.UNAUTHORIZED);
         }
 
         if (paymentRequest.getAmount()<= 0 ) {
-            return new ResponseEntity<String>("Fail -> Please Provide A Positive Amount", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
 }
 
         if (paymentRequest.getCcNumber()== null || paymentRequest.getCcNumber().equalsIgnoreCase("")) {
-            return new ResponseEntity<String>("Fail -> Please Provide A CreditCard Number Account!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
         }
 
 
@@ -89,12 +89,12 @@ public class PaymentGatewayAPIs {
 //            Example<UserCreditCard> example = Example.of(creditcard);
 //            List<UserCreditCard> results = creditcardRepository.findAll(example);
 
-             String expirydate = paymentRequest.getMonth()+ "/" + paymentRequest.getYear();  
+             //String expirydate = paymentRequest.getMonth()+ "/" + paymentRequest.getYear();  
 //            
-            List<UserCreditCard> results = creditcardRepository.findCreditcard(paymentRequest.getCcNumber(),paymentRequest.getCvv(),expirydate);
+            List<UserCreditCard> results = creditcardRepository.findCreditcard(paymentRequest.getCcNumber(),paymentRequest.getCvv(),paymentRequest.getExpiryDate());
        
          if (results.isEmpty()) {
-            return new ResponseEntity<String>("Fail -> Please Provide A Valid CreditCard Number !", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
              
             UserCreditCard creditcard = null;
@@ -102,11 +102,11 @@ public class PaymentGatewayAPIs {
              creditcard = results.get(0);
           
           if (creditcard.getAmountavailable() < paymentRequest.getAmount()) {
-            return new ResponseEntity<String>("Fail -> Funds not available", HttpStatus.BAD_REQUEST);
+              return new ResponseEntity<Object>(new Response("","DECLINED-INSUFFICIANT-FUNDS"), HttpStatus.BAD_REQUEST);
         }
 
         if (!creditcard.getUser().getFirstname().equalsIgnoreCase(paymentRequest.getFirstName())&& !creditcard.getUser().getLastname().equalsIgnoreCase(paymentRequest.getLastName())) {
-             return new ResponseEntity<String>("Fail -> Please Provide A Valid CreditCard Number !", HttpStatus.BAD_REQUEST);
+             return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
         }  
           
           if (paymentRequest.getMerchantAccountNo().startsWith("111")|| paymentRequest.getMerchantAccountNo().startsWith("222"))
@@ -114,13 +114,13 @@ public class PaymentGatewayAPIs {
                if (paymentRequest.getMerchantAccountNo().startsWith("111"))
                {
                     if (!accountRepository.existsByAccountno(paymentRequest.getMerchantAccountNo())) {
-                     return new ResponseEntity<String>("Fail -> Not a Valid Account Number!", HttpStatus.BAD_REQUEST);
+                        return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
                     }
                }
            }
            else 
            {
-               return new ResponseEntity<String>("Fail -> Not a Valid Account Number ", HttpStatus.BAD_REQUEST);    
+               return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
            }  
           
         // withdrawal
@@ -148,13 +148,13 @@ public class PaymentGatewayAPIs {
     public ResponseEntity<?> Process(@RequestHeader(value="apikey") String apiKey,  @Valid @RequestBody ProcessRequest processrequest ) throws Exception {
 
         if (!this.apiKey.equalsIgnoreCase(apiKey)) {
-            return new ResponseEntity<String>("Fail -> Invalid Access Key!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.UNAUTHORIZED);
         }
                 
            
             Transactions transaction = transRepository.findTransaction(Long.parseLong(processrequest.getTransactionId()),Transactions.TransStatus.CREATED.toString()).orElse(null);
             if (transaction == null)
-            return new ResponseEntity<>("Fail ->The Pre-auth Number you are refering to is not Valid , or is expired", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.NOT_FOUND);
         
         
        
@@ -243,15 +243,18 @@ public class PaymentGatewayAPIs {
            }
            else 
            {
-               return new ResponseEntity<String>("Fail -> Not a Valid Account Number ", HttpStatus.BAD_REQUEST);    
+               return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
            }    
        }
        else 
        {
-            return new ResponseEntity<String>("Fail -> Not a Valid Action ", HttpStatus.BAD_REQUEST);
+           return new ResponseEntity<Object>(new Response("","DECLINED"), HttpStatus.BAD_REQUEST);
        }
        
          
         return  ResponseEntity.ok(new Response(transaction.getId().toString(),"COMMITTED"));
+
     }
+
+
 }

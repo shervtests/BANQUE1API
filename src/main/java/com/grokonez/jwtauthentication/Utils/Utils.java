@@ -59,6 +59,34 @@ public class Utils {
     long diffInMillies = date2.getTime() - date1.getTime();
     return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 }
-       
+    
+    public static int  getPasswordCharaters (String password)      
+    {
+        int numOfSpecial = 0;
+        int numOfLetters = 0;
+        int numOfDigits = 0;
+        int totalCharacter = 0;
+
+        byte[] bytes = password.getBytes();
+        for (byte tempByte : bytes) {
+            if (tempByte >= 33 && tempByte <= 47) {
+                numOfSpecial++;
+                totalCharacter++;
+            }
+
+            char tempChar = (char) tempByte;
+            if (Character.isDigit(tempChar)) {
+                numOfDigits++;
+                totalCharacter++;
+            }
+
+            if (Character.isLetter(tempChar)) {
+                numOfLetters++;
+                totalCharacter++;
+            }
+
+        }
+        return totalCharacter;
+    }
 	   
 }

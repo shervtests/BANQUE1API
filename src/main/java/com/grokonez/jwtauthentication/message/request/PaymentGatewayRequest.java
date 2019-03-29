@@ -32,14 +32,16 @@ public class PaymentGatewayRequest {
     @Min(value = 3, message = "CVV should not be less than 16")
     private String cvv;
     
-    @NotBlank(message = "Month Should not be blank")
+    /*@NotBlank(message = "Month Should not be blank")
     @Min(value = 2, message = "Month should not be less than 02 Characters")
     private String month;
     
     @NotBlank(message = "Year Should not be blank")
     @Min(value = 4, message = "Year should not be less than 04 Characters")
-    private String year;
-    
+    private String year;*/
+    @NotBlank(message = "Expiry Date Should not be blank")
+    private String expiryDate;
+            
     @Min(value = 16, message = "Credit card number should not be less than 16")
     private String ccNumber;
     
@@ -84,7 +86,7 @@ public class PaymentGatewayRequest {
         this.cvv = cvv;
     }
 
-    public String getMonth() {
+    /*public String getMonth() {
         return month;
     }
 
@@ -98,7 +100,17 @@ public class PaymentGatewayRequest {
 
     public void setYear(String year) {
         this.year = year;
+    }*/
+
+    public String getExpiryDate() {
+        return expiryDate;
     }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+    
+   
 
     public String getCcNumber() {
         return ccNumber;

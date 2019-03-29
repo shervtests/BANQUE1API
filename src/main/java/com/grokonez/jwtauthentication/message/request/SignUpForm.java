@@ -5,16 +5,10 @@ import java.util.Set;
 import javax.validation.constraints.*;
 
 public class SignUpForm {
-    @NotBlank
-    @Size(min=3, max = 50)
     private String company;
 
-    @NotBlank
-    @Size(min = 3, max = 50)
     private String firstname;
 
-    @NotBlank
-    @Size(min = 3, max = 50)
     private String lastname;
 
     @NotBlank
@@ -33,7 +27,7 @@ public class SignUpForm {
     private String question1;
 
     @NotBlank
-    @Size(min=6, max = 100)
+    @Size(min=1, max = 100)
     private String answer1;
 
     @NotBlank
@@ -41,7 +35,7 @@ public class SignUpForm {
     private String question2;
 
     @NotBlank
-    @Size(min=6, max = 100)
+    @Size(min=1, max = 100)
     private String answer2;
 
     private String address;
